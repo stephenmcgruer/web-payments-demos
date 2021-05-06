@@ -4,6 +4,49 @@
 const textEncoder = new TextEncoder();
 
 /**
+ * Creates a payment credential.
+ */
+async function createPaymentCredential(windowLocalStorageIdentifier) {
+  const rp = {
+    id: 'stephenmcgruer.github.io',
+    name: 'Stephen McGruer',
+  };
+  const instrument = {
+    displayName: 'Troy ····',
+    icon: 'https://stephenmcgruer.github.io/web-payments-demos/pr/spc-handler/troy.png',
+  };
+  const pubKeyCredParams = [{
+    type: 'public-key',
+    alg: -7,  // ECDSA, not supported on Windows.
+  }, {
+    type: 'public-key',
+    alg: -257,  // RSA, supported on Windows.
+  }];
+  const authenticatorSelection = {
+    userVerification: 'required',
+  };
+  const payment = {
+    rp,
+    instrument,
+    challenge: textEncoder.encode('Transaction approval challenge'),
+    pubKeyCredParams,
+    authenticatorSelection,
+  };
+  try {
+    const publicKeyCredential = await navigator.credentials.create({payment});
+    window.localStorage.setItem(
+        windowLocalStorageIdentifier,
+        btoa(String.fromCharCode(...new Uint8Array(
+            publicKeyCredential.rawId))));
+    info(windowLocalStorageIdentifier + ': Credential ' +
+         window.localStorage.getItem(windowLocalStorageIdentifier) +
+         ' enrolled.');
+  } catch (err) {
+    error(err);
+  }
+}
+
+/**
  * Initializes the payment request object.
  * @return {PaymentRequest} The payment request object.
  */
