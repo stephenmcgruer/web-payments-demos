@@ -282,7 +282,7 @@ async function onInputBuyClicked() {
     const instrumentResponse = await request.show();
     await instrumentResponse.complete('success')
     console.log(instrumentResponse);
-    info(windowLocalStorageIdentifier + ' payment response: ' +
+    info(credentialInput.value + ' payment response: ' +
       objectToString(instrumentResponse));
   } catch (err) {
     error(err);
