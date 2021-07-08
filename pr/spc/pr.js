@@ -137,7 +137,7 @@ function objectToString(input) {
 async function createCredentialCompat() {
   const rp = {
     id: window.location.hostname,
-    name: 'Rouslan Solomakhin',
+    name: 'Stephen McGruer',
   };
   const pubKeyCredParams = [{
     type: 'public-key',
