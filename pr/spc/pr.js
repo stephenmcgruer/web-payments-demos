@@ -274,7 +274,7 @@ async function onInputBuyClicked() {
     return;
   }
 
-  const request = await buildPaymentRequest(credentialInput.value);
+  const request = await buildPaymentRequest(spcCredentialInput.value);
   if (!request)
     return;
 
@@ -282,7 +282,7 @@ async function onInputBuyClicked() {
     const instrumentResponse = await request.show();
     await instrumentResponse.complete('success')
     console.log(instrumentResponse);
-    info(credentialInput.value + ' payment response: ' +
+    info(spcCredentialInput.value + ' payment response: ' +
       objectToString(instrumentResponse));
   } catch (err) {
     error(err);
@@ -320,6 +320,29 @@ async function webAuthnGet(windowLocalStorageIdentifier) {
     console.log(credentialInfoAssertion);
     info('Successful login with ' + windowLocalStorageIdentifier + ': ' +
       objectToString(credentialInfoAssertion));
+  } catch (err) {
+    error(err);
+  }
+}
+
+async function webAuthnInputGet() {
+  const credentialId = webauthnCredentialInput.value;
+  try {
+    const publicKey = {
+      challenge: textEncoder.encode('Authentication challenge'),
+      userVerification: 'required',
+      allowCredentials: [
+        {
+          transports: ['internal'],
+          type: 'public-key',
+          id: Uint8Array.from(atob(credentialId), c => c.charCodeAt(0)),
+        },
+      ],
+    };
+
+    const credentialInfoAssertion = await navigator.credentials.get({publicKey});
+    console.log(credentialInfoAssertion);
+    info('Successful login with credential ' + credentialInfoAssertion.id);
   } catch (err) {
     error(err);
   }

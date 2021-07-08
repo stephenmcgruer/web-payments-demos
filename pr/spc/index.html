@@ -32,11 +32,13 @@
     <p><button onclick="onBuyClicked('Credential #2')">Pay $0.01</button> (with
       credential #2)</p>
     <p><button onclick="onInputBuyClicked()">Pay $0.01</button> (with
-      credential: <input type="text" id="credentialInput" />)</p>
+      credential: <input type="text" id="spcCredentialInput" />)</p>
     <p><button onclick="webAuthnGet('Credential #1')">Login</button> (with
       credential #1)</button></p>
     <p><button onclick="webAuthnGet('Credential #2')">Login</button> (with
       credential #2)</button></p>
+    <p><button onclick="webAuthnInputGet()">Login</button> (with credential :
+      <input type="text" id="webauthnCredentialInput" />)</button></p>
   </div>
   <pre id="msg"></pre>
   <p><em>Enroll Credential</em> will make the following request:
