@@ -209,7 +209,7 @@ async function createPaymentCredential(windowLocalStorageIdentifier) {
  * Initializes the payment request object.
  * @return {PaymentRequest} The payment request object.
  */
-async function buildPaymentRequest(windowLocalStorageIdentifier) {
+async function buildPaymentRequest(credentialId) {
   if (!window.PaymentRequest) {
     return null;
   }
@@ -225,8 +225,7 @@ async function buildPaymentRequest(windowLocalStorageIdentifier) {
     const supportedInstruments = [{
       supportedMethods: 'secure-payment-confirmation',
       data: {
-        credentialIds: [base64ToArray(window.localStorage.getItem(
-          windowLocalStorageIdentifier))],
+        credentialIds: [base64ToArray(credentialId)],
         instrument: updatedInstrument,
         networkData: challenge,
         challenge,
@@ -257,8 +256,28 @@ async function onBuyClicked(windowLocalStorageIdentifier) {
     error('PaymentRequest API is not supported.');
     return;
   }
-  const request = await buildPaymentRequest(windowLocalStorageIdentifier);
+  const request = await buildPaymentRequest(window.localStorage.getItem(windowLocalStorageIdentifier));
   if (!request) return;
+
+  try {
+    const instrumentResponse = await request.show();
+    await instrumentResponse.complete('success')
+    info(windowLocalStorageIdentifier + ': ' + JSON.stringify(instrumentResponse, undefined, 2));
+  } catch (err) {
+    error(err);
+  }
+}
+
+async function onInputBuyClicked() {
+  if (!window.PaymentRequest) {
+    error('PaymentRequest API is not supported.');
+    return;
+  }
+
+  const request = await buildPaymentRequest(credentialInput.value);
+  if (!request)
+    return;
+
   try {
     const instrumentResponse = await request.show();
     await instrumentResponse.complete('success')
@@ -275,7 +294,7 @@ async function checkCanMakePayment(windowLocalStorageIdentifier) {
     return;
   }
   try {
-    const request = await buildPaymentRequest(windowLocalStorageIdentifier);
+    const request = await buildPaymentRequest(window.localStorage.getItem(windowLocalStorageIdentifier));
     if (!request) return;
     const result = await request.canMakePayment();
     info((result ? 'Can make payment.' : 'Cannot make payment'));
