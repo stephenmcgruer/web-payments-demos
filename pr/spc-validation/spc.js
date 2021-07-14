@@ -13,12 +13,10 @@ async function createPaymentCredential(windowLocalStorageIdentifier) {
     displayName: 'Troy ····',
     icon: 'https://stephenmcgruer.github.io/web-payments-demos/pr/spc/troy.png',
   };
-  const pubKeyCredParams = [/*
-  // For simplicity, only using RSA.
-  {
+  const pubKeyCredParams = [{
     type: 'public-key',
     alg: -7,  // ECDSA, not supported on Windows.
-  }, */
+  },
   {
     type: 'public-key',
     alg: -257,  // RSA, supported on Windows.
@@ -35,12 +33,11 @@ async function createPaymentCredential(windowLocalStorageIdentifier) {
   };
   try {
     const credential = await navigator.credentials.create({payment});
+    // In a real example, you would store the credential id and its public key
+    // on your server somewhere.
     window.localStorage.setItem(
         windowLocalStorageIdentifier,
         btoa(String.fromCharCode(...new Uint8Array(credential.rawId))));
-    window.localStorage.setItem(
-        windowLocalStorageIdentifier + "-pk",
-        bota(String.fromCharCode(credential.response.getPublicKey())));
     info(windowLocalStorageIdentifier + ': Credential ' +
          window.localStorage.getItem(windowLocalStorageIdentifier) +
          ' enrolled.');
@@ -63,11 +60,7 @@ async function onBuyClicked(windowLocalStorageIdentifier) {
     const instrumentResponse = await request.show();
     await instrumentResponse.complete('success')
     info(windowLocalStorageIdentifier + ': ' + JSON.stringify(instrumentResponse, undefined, 2));
-
-
-    let pk = window.localStorage.getItem(windowLocalStorageIdentifier + "-pk");
-    pk = Uint8Array.from(atob(pk), c => c.charCodeAt(0));
-    await validate(instrumentResponse.details, pk);
+    await validate(instrumentResponse.details);
   } catch (err) {
     error(err);
   }
@@ -129,7 +122,7 @@ async function buildPaymentRequest(credentialId) {
  * start, general WebAuthn validation should also be done; see
  * https://w3c.github.io/webauthn/#sctn-verifying-assertion
  */
-async function validate(details, publicKey) {
+async function validate(details) {
   let authenticatorData, clientDataJSON, signature, challenge;
 
   if (details.constructor === PublicKeyCredential) {
@@ -143,12 +136,15 @@ async function validate(details, publicKey) {
     const clientData = JSON.parse(arrayBufferToString(clientDataJSON));
     challenge = clientData.challenge
 
+    // assert(clientData.origin is as expected)
     // assert(challenge == base64url encoding of input challenge to SPC).
 
     const paymentInfo = clientData.payment;
 
-    // TODO: Fix this.
-    // assert(paymentInfo.??? is ???)
+    // assert(paymentInfo.rp is as expected)
+    // assert(paymentInfo.topOrigin is as expected)
+    // assert(paymentInfo.instrument.displayName is as expected)
+    // assert(paymentInfo.instrument.icon is as expected)
     // assert(paymentInfo.total.currency is as expected)
     // assert(paymentInfo.total.amount is as expected)
   } else {
@@ -162,6 +158,8 @@ async function validate(details, publicKey) {
     // TODO: Assumes base64, not base64url. May break on some inputs.
     const clientData = JSON.parse(atob(clientDataJSON));
     challenge = clientData.challenge;
+
+    // assert(clientData.origin is as expected)
 
     const spcChallenge = JSON.parse(details.challenge);
     // assert(spcChallenge.networkData == arrayBufferToString(input challenge to SPC))
@@ -184,10 +182,7 @@ async function validate(details, publicKey) {
   // Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData and hash.
   let concated = concatBuffers(authenticatorData, hash)
 
-  // TODO: Validate signature.
-  // NOTE: This assumes RSA.
-  const key = await crypto.subtle.importKey("spki", publicKey,  { name: "RSASSA-PKCS1-v1_5", hash: {name: "SHA-256"} }, false, ["verify"]);
-  //const result = crypto.subtle.verify("skpi", publicKey, 
+  // assert(verify signature over concated, using previously-saved publicKey)
 }
 
 function arrayBufferToString(buffer) {
