@@ -87,8 +87,8 @@ async function buildPaymentRequest(credentialId) {
         action: 'authenticate',
         instrument: instrument,   // For Chrome >= M93
         credentialIds: [Uint8Array.from(atob(credentialId), c => c.charCodeAt(0))],
-        challenge: challenge,
-        networkData: challenge,  // Handle Chrome < M93
+        challenge: challengeData,
+        networkData: challengeData,  // Handle Chrome < M93
         timeout: 60000,
         fallbackUrl: ''
       },
