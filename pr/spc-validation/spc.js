@@ -72,15 +72,23 @@ async function buildPaymentRequest(credentialId) {
     return null;
   }
 
+  const instrument = {
+    displayName: 'Troy ····',
+    icon: 'https://stephenmcgruer.github.io/web-payments-demos/pr/spc/troy.png',
+  };
+
   let request = null;
 
   try {
+    const challengeData = textEncoder.encode('network_data');
     const supportedInstruments = [{
       supportedMethods: 'secure-payment-confirmation',
       data: {
         action: 'authenticate',
+        instrument: instrument,   // For Chrome >= M93
         credentialIds: [Uint8Array.from(atob(credentialId), c => c.charCodeAt(0))],
-        networkData: textEncoder.encode('network_data'),
+        challenge: challenge,
+        networkData: challenge,  // Handle Chrome < M93
         timeout: 60000,
         fallbackUrl: ''
       },
@@ -117,6 +125,7 @@ async function validate(details) {
 
   if (details.constructor === PublicKeyCredential) {
     // WebAuthn-style response (>= M93).
+    info("Detected new WebAuthn-style response");
 
     authenticatorData = details.response.authenticatorData;  // ArrayBuffer
     clientDataJSON = details.response.clientDataJSON;  // ArrayBuffer
@@ -135,6 +144,7 @@ async function validate(details) {
     // assert(paymentInfo.total.amount is as expected)
   } else {
     // Legacy SPC response (<M93).
+    info("Detected Legacy SPC response");
 
     authenticatorData = details.info.authenticator_data;  // base64url-encoded
     clientDataJSON = details.info.client_data_json;  // base64url-encoded
