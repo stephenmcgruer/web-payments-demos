@@ -161,17 +161,30 @@ async function validate(details) {
     // assert(paymentInfo.merchantOrigin is as expected)
     // assert(paymentInfo.total.currency is as expected)
     // assert(paymentInfo.total.amount is as expected)
+
+    // Checking the signature requires that clientDataJSON is an ArrayBuffer.
+    clientDataJSON = base64ToArray(clientDataJSON);
   }
 
-  // cData == clientDataJSON as an arraybuffer
-  // 
   // Let hash be the result of computing a hash over the cData using SHA-256.
-  //   let hash = await crypto.subtle.digest("SHA-256", cData)
+  let hash = await crypto.subtle.digest("SHA-256", clientDataJSON)
+
   // Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData and hash.
-  //   let concated = concatBuffers(authenticatorData, hash)
-  //   // TODO: Validate signature.
+  let concated = concatBuffers(authenticatorData, hash)
+  // TODO: Validate signature.
 }
 
 function arrayBufferToString(buffer) {
   return String.fromCharCode(...new Uint8Array(input));
+}
+
+function base64ToArray(input) {
+  return Uint8Array.from(atob(input), c => c.charCodeAt(0))
+}
+
+function concatBuffers(buf1, buf2) {
+  let tmp = new Uint8Array(buf1.byteLength + buf2.byteLength);
+  tmp.set(new Uint8Array(buf1), 0);
+  tmp.set(new Uint8Array(buf2), buf1.byteLength);
+  return tmp.buffer;
 }
