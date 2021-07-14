@@ -13,10 +13,13 @@ async function createPaymentCredential(windowLocalStorageIdentifier) {
     displayName: 'Troy ····',
     icon: 'https://stephenmcgruer.github.io/web-payments-demos/pr/spc/troy.png',
   };
-  const pubKeyCredParams = [{
+  const pubKeyCredParams = [/*
+  // For simplicity, only using RSA.
+  {
     type: 'public-key',
     alg: -7,  // ECDSA, not supported on Windows.
-  }, {
+  }, */
+  {
     type: 'public-key',
     alg: -257,  // RSA, supported on Windows.
   }];
@@ -35,6 +38,9 @@ async function createPaymentCredential(windowLocalStorageIdentifier) {
     window.localStorage.setItem(
         windowLocalStorageIdentifier,
         btoa(String.fromCharCode(...new Uint8Array(credential.rawId))));
+    window.localStorage.setItem(
+        windowLocalStorageIdentifier + "-pk",
+        bota(String.fromCharCode(credential.response.getPublicKey())));
     info(windowLocalStorageIdentifier + ': Credential ' +
          window.localStorage.getItem(windowLocalStorageIdentifier) +
          ' enrolled.');
@@ -58,7 +64,10 @@ async function onBuyClicked(windowLocalStorageIdentifier) {
     await instrumentResponse.complete('success')
     info(windowLocalStorageIdentifier + ': ' + JSON.stringify(instrumentResponse, undefined, 2));
 
-    await validate(instrumentResponse.details);
+
+    let pk = window.localStorage.getItem(windowLocalStorageIdentifier + "-pk");
+    pk = Uint8Array.from(atob(pk), c => c.charCodeAt(0));
+    await validate(instrumentResponse.details, pk);
   } catch (err) {
     error(err);
   }
@@ -120,7 +129,7 @@ async function buildPaymentRequest(credentialId) {
  * start, general WebAuthn validation should also be done; see
  * https://w3c.github.io/webauthn/#sctn-verifying-assertion
  */
-async function validate(details) {
+async function validate(details, publicKey) {
   let authenticatorData, clientDataJSON, signature, challenge;
 
   if (details.constructor === PublicKeyCredential) {
@@ -174,11 +183,15 @@ async function validate(details) {
 
   // Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData and hash.
   let concated = concatBuffers(authenticatorData, hash)
+
   // TODO: Validate signature.
+  // NOTE: This assumes RSA.
+  const key = await crypto.subtle.importKey("spki", publicKey,  { name: "RSASSA-PKCS1-v1_5", hash: {name: "SHA-256"} }, false, ["verify"]);
+  //const result = crypto.subtle.verify("skpi", publicKey, 
 }
 
 function arrayBufferToString(buffer) {
-  return String.fromCharCode(...new Uint8Array(input));
+  return String.fromCharCode(...new Uint8Array(buffer));
 }
 
 function base64ToArray(input) {
