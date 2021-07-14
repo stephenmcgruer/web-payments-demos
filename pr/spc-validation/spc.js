@@ -150,6 +150,7 @@ async function validate(details) {
     clientDataJSON = details.info.client_data_json;  // base64url-encoded
     signature = details.signature;  // base64url-encoded
 
+    // TODO: Assumes base64, not base64url. May break on some inputs.
     const clientData = JSON.parse(atob(clientDataJSON));
     challenge = clientData.challenge;
 
@@ -162,7 +163,9 @@ async function validate(details) {
     // assert(paymentInfo.total.currency is as expected)
     // assert(paymentInfo.total.amount is as expected)
 
-    // Checking the signature requires that clientDataJSON is an ArrayBuffer.
+    // Checking the signature requires that authenticatorData and
+    // clientDataJSON are ArrayBuffers.
+    authenticatorData = base64ToArray(clientDataJSON);
     clientDataJSON = base64ToArray(clientDataJSON);
   }
 
@@ -179,6 +182,7 @@ function arrayBufferToString(buffer) {
 }
 
 function base64ToArray(input) {
+  // TODO: Assumes base64, not base64url. May break on some inputs.
   return Uint8Array.from(atob(input), c => c.charCodeAt(0))
 }
 
