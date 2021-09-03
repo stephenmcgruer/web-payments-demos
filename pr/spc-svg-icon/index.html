@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--
+     - Origin trial for secure payment confirmation:
+     - https://developer.chrome.com/origintrials/#/view_trial/2735936773627576321
+     -->
+  <meta http-equiv="origin-trial"
+  content="An9Af6IDIBjlG732lFn3VbFWOFohnTPcTjQntKSCumZ6pPoE6UJQDKNfj3kwdHrYXAdyUNHVDC2iyhydOEs2SgYAAABteyJvcmlnaW4iOiJodHRwczovL3N0ZXBoZW5tY2dydWVyLmdpdGh1Yi5pbzo0NDMiLCJmZWF0dXJlIjoiU2VjdXJlUGF5bWVudENvbmZpcm1hdGlvblYyIiwiZXhwaXJ5IjoxNjMxNjYzOTk5fQ==">
+
+  <title>Secure Payment Confirmation</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+  <div id="contents">
+    <h1>Secure Payment Confirmation</h1>
+    <p>This is a test website. Nothing is charged.</p>
+    <p><b style="color:red">Notice</b>:</p>
+    <pre>
+  If testing on Chrome 95, please add --enable-features=SecurePaymentConfirmationBrowser
+  command line flag to Chrome, because the origin trial has ended in M94 and the feature
+  is disabled by default on trunk and in all release channels until the launch bug
+  approval. Examples:
+  * Mac: "/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --enable-features=SecurePaymentConfirmationBrowser"
+  * Windows: "chrome.exe --enable-features=SecurePaymentConfirmationBrowser"
+    </pre>
+    <p>Cart art icon: <input id="card-icon" type="text" value="https://checkoutshopper-live.adyen.com/checkoutshopper/images/logos/amex.svg" style="width: 65ch;"></input></p>
+    <p><button onclick="createPaymentCredential('Credential #1')">Enroll
+        Credential #1</button></p>
+    <p><button onclick="onBuyClicked('Credential #1')">Pay $0.01</button> (with
+      credential #1)</p>
+  </div>
+  <pre id="msg"></pre>
+  <p><em>Enroll Credential</em> will make the following request:
+  <pre style="color: #265289">
+async function createCredentialCompat() {
+  const rp = {
+    id: window.location.hostname,
+    name: 'Rouslan Solomakhin',
+  };
+  const pubKeyCredParams = [{
+    type: 'public-key',
+    alg: -7, // ECDSA, not supported on Windows.
+  }, {
+    type: 'public-key',
+    alg: -257, // RSA, supported on Windows.
+  }];
+  const challenge = textEncoder.encode('Enrollment challenge');
+  if (window.PaymentCredential) {
+    const payment = {
+      rp,
+      instrument: {
+        displayName: 'Troy ····',
+        icon: document.getElementById('card-icon').value,
+      },
+      challenge,
+      pubKeyCredParams,
+      authenticatorSelection: {
+        userVerification: 'required',
+      },
+    };
+    return await navigator.credentials.create({
+      payment
+    });
+  } else {
+    const publicKey = {
+      rp,
+      user: {
+        name: 'user@domain',
+        id: Uint8Array.from(String(Math.random()*999999999), c => c.charCodeAt(0)),
+        displayName: 'User',
+      },
+      challenge,
+      pubKeyCredParams,
+      authenticatorSelection: {
+        userVerification: 'required',
+        residentKey: 'required',
+        authenticatorAttachment: 'platform',
+      },
+      extensions: {
+        payment: {
+          isPayment: true,
+        },
+      }
+    };
+    return await navigator.credentials.create({
+      publicKey
+    });
+  }
+}
+const publicKeyCredential = createCredentialCompat();
+window.localStorage.setItem(
+    'credential_identifier',
+    btoa(String.fromCharCode(...new Uint8Array(
+        publicKeyCredential.rawId))));</pre>
+  </p>
+  <p><em>Pay $0.01</em> will make the following request:
+  <pre style="color: #265289">new PaymentRequest([{
+  supportedMethods: 'secure-payment-confirmation',
+  data: {
+    credentialIds: [Uint8Array.from(
+        atob(window.localStorage.getItem('credential_identifier')),
+        c => c.charCodeAt(0))],
+    instrument: {
+      displayName: 'My Troy Card',
+      icon: document.getElementById('card-icon').value,
+    },
+    challenge: textEncoder.encode('network_data'),
+    timeout: 60000,
+    payeeOrigin: window.location.origin,
+  },
+}], {
+  total: {
+    label: 'Total',
+    amount: {
+      currency: 'USD',
+      value: '0.01',
+    },
+  },
+});</pre>
+  </p>
+  <p>Based on the <a
+      href="https://github.com/w3c/secure-payment-confirmation">Secure Payment
+      Confirmation explainer</a>.</p>
+  <script src="../util.js"></script>
+  <script src="pr.js"></script>
+  <script src="/redirect.js"></script>
+  <script>
+    checkCanMakePayment('Credential #1');
+  </script>
+</body>
+
+</html>
