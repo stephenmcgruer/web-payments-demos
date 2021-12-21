@@ -7,12 +7,13 @@ function buildPaymentRequest() {
     return null;
   }
 
-  const supportedInstruments = [{
-    supportedMethods: 'https://bobbucks.dev/pay/manifest.json'
-  },
-  {
-    supportedMethods: 'https://windy-mire-composer.glitch.me/'
-  }
+  const supportedInstruments = [
+    {
+      supportedMethods: 'https://windy-mire-composer.glitch.me/'
+    },
+    {
+      supportedMethods: 'https://bobbucks.dev/pay/manifest.json'
+    },
   ];
 
   const details = {
