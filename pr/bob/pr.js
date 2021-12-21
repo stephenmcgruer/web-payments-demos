@@ -8,10 +8,10 @@ function buildPaymentRequest() {
   }
 
   const supportedInstruments = [{
-    supportedMethods: 'https://bobpay.xyz/pay'
+    supportedMethods: 'https://bobbucks.dev/pay/manifest.json'
   },
   {
-    supportedMethods: 'interledger'
+    supportedMethods: 'https://windy-mire-composer.glitch.me/'
   }
   ];
 
