@@ -38,7 +38,7 @@ async function install() {
     await registration.paymentManager.instruments.set('card-id', {
       name: 'Citi ****1234',
       icons: [{src:'card_art.png', sizes: '960x607',type: 'image/png'}],
-      method: 'https://rsolomakhin.github.io/pr/apps/src2',
+      method: 'https://stephenmcgruer.github.io/web-payments-demos/pr/apps/src2',
     });
     ////////////////////////////////////////////////////////////////////////////
     //

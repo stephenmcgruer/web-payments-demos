@@ -121,7 +121,7 @@ function install() {
       registration.paymentManager.instruments
         .set('instrument-key', {
           name: 'Chrome uses name and icon from the web app manifest',
-          method: 'https://rsolomakhin.github.io/pr/apps/pmc',
+          method: 'https://stephenmcgruer.github.io/web-payments-demos/pr/apps/pmc',
         })
         .then(() => {
           registration.paymentManager.instruments

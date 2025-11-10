@@ -8,7 +8,7 @@ function buildPaymentRequest(appName) {
   }
 
   const supportedInstruments = [{
-    supportedMethods: `https://rsolomakhin.github.io/pr/apps/with-errors/${appName}/payment_method_manifest.json`
+    supportedMethods: `https://stephenmcgruer.github.io/web-payments-demos/pr/apps/with-errors/${appName}/payment_method_manifest.json`
   }];
 
   const details = {

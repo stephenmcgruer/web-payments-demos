@@ -31,7 +31,7 @@ function buildPaymentRequest() {
   }
 
   const supportedInstruments = [{
-    supportedMethods: 'https://rsolomakhin.github.io/pr/apps/src2',
+    supportedMethods: 'https://stephenmcgruer.github.io/web-payments-demos/pr/apps/src2',
   }];
 
   const details = {

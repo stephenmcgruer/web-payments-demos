@@ -1,7 +1,7 @@
 /* exported createPaymentCredential */
 /* exported onBuyClicked */
 
-const kValidLogoUrl = 'https://rsolomakhin.github.io/static/sync-network-logo.png';
+const kValidLogoUrl = 'https://stephenmcgruer.github.io/web-payments-demos/static/sync-network-logo.png';
 
 /**
  * Creates a payment credential.
@@ -29,7 +29,7 @@ async function onBuyClicked(windowLocalStorageIdentifier, logosList, showOptOut)
       instrument: {
         displayName: 'SPC Card',
         details: '···· 1234',
-        icon: 'https://rsolomakhin.github.io/static/troy-card-art.png',
+        icon: 'https://stephenmcgruer.github.io/web-payments-demos/static/troy-card-art.png',
       },
       payeeName: 'SPC Demo Store',
       payeeOrigin: 'https://store.example',

@@ -1,7 +1,7 @@
 self.resolver = null;
 
 const response = {
-  methodName: 'https://rsolomakhin.github.io/pr/apps/src2',
+  methodName: 'https://stephenmcgruer.github.io/web-payments-demos/pr/apps/src2',
   details: {
       billingAddress: {
           addressLine: [
@@ -37,10 +37,10 @@ self.addEventListener('message', (evt) => {
 
 
 self.addEventListener('canmakepayment', (evt) => {
-  if (evt.topOrigin !== 'https://rsolomakhin.github.io/') {
+  if (evt.topOrigin !== 'https://stephenmcgruer.github.io/web-payments-demos/') {
     console.log('Hi ' + evt.topOrigin + '!');
   }
-  if (evt.paymentRequestOrigin !== 'https://rsolomakhin.github.io/' && evt.paymentRequestOrigin !== evt.topOrigin) {
+  if (evt.paymentRequestOrigin !== 'https://stephenmcgruer.github.io/web-payments-demos/' && evt.paymentRequestOrigin !== evt.topOrigin) {
     console.log('Hi ' + evt.paymentRequestOrigin + '!');
   }
   if (evt.modifiers && evt.modifiers.length > 0) {

@@ -10,7 +10,7 @@ self.addEventListener('canmakepayment', function(c)  {
 self.addEventListener('paymentrequest', (evt) => {
     console.log('Payment requested');
     evt.respondWith({
-        methodName: 'https://rsolomakhin.github.io',
+        methodName: 'https://stephenmcgruer.github.io/web-payments-demos',
         details: {
             token: '0987654321',
         },

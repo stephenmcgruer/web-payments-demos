@@ -6,12 +6,12 @@ function info(msg) {
 
 async function createPaymentCredential() {
   const rp = {
-    id: 'rsolomakhin.github.io',
+    id: 'stephenmcgruer.github.io/web-payments-demos',
     name: 'Rouslan Solomakhin',
   };
   const instrument = {
     displayName: 'Troy ····',
-    icon: 'https://rsolomakhin.github.io/static/troy.png',
+    icon: 'https://stephenmcgruer.github.io/web-payments-demos/static/troy.png',
   };
   const pubKeyCredParams = [{
     type: 'public-key',

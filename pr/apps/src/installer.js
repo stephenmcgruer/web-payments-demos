@@ -81,13 +81,13 @@ const publicKeyCredentialCreationOptions = {
     challenge: Uint8Array.from(
         'INSECURE.SHOULD-BE-A-RANDOM-STRING-FROM-SERVER', c => c.charCodeAt(0)),
     rp: {
-        name: "rsolomakhin.github.io",
-        id: "rsolomakhin.github.io",
+        name: "stephenmcgruer.github.io/web-payments-demos",
+        id: "stephenmcgruer.github.io/web-payments-demos",
     },
     user: {
         id: Uint8Array.from(
             "IOFIVBNMUJ", c => c.charCodeAt(0)),
-        name: "insecure-demo@rsolomakhin.github.io",
+        name: "insecure-demo@stephenmcgruer.github.io/web-payments-demos",
         displayName: "Demo, Insecure",
     },
     pubKeyCredParams: [{alg: -7, type: "public-key"}, {alg: -257, type: "public-key"}],

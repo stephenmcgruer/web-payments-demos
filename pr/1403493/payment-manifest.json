@@ -1,8 +1,8 @@
 {
     "default_applications": [
-        "https://rsolomakhin.github.io/pr/1403493/manifest.json"
+        "https://stephenmcgruer.github.io/web-payments-demos/pr/1403493/manifest.json"
     ],
     "supported_origins": [
-        "https://rsolomakhin.github.io"
+        "https://stephenmcgruer.github.io/web-payments-demos"
     ]
 }

@@ -38,7 +38,7 @@ async function install() {
     await registration.paymentManager.instruments.set('card-id', {
       name: 'CapitalOne ****5678',
       icons: [{src:'card_art_2.png', sizes: '960x623',type: 'image/png'}],
-      method: 'https://rsolomakhin.github.io/pr/apps/src2',
+      method: 'https://stephenmcgruer.github.io/web-payments-demos/pr/apps/src2',
     });
     window.location.href = '../';
   } catch(error) {

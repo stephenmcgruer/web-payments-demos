@@ -1,7 +1,7 @@
 // The data should be stored on the server.
 
 const response1 = {
-  methodName: 'https://rsolomakhin.github.io/pr/apps/pmc',
+  methodName: 'https://stephenmcgruer.github.io/web-payments-demos/pr/apps/pmc',
   details: {
       billingAddress: {
           addressLine: [
@@ -27,7 +27,7 @@ const response1 = {
 };
 
 const response2 = {
-  methodName: 'https://rsolomakhin.github.io/pr/apps/pmc',
+  methodName: 'https://stephenmcgruer.github.io/web-payments-demos/pr/apps/pmc',
   details: {
       billingAddress: {
           addressLine: [

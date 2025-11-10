@@ -5,7 +5,7 @@ function buildPaymentRequest() {
 
     let supportedInstruments = [{
         supportedMethods: 
-            'https://rsolomakhin.github.io',
+            'https://stephenmcgruer.github.io/web-payments-demos',
         
     }];
 

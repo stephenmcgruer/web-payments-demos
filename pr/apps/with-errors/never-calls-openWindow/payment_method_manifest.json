@@ -1,4 +1,4 @@
 {
-  "default_applications": ["https://rsolomakhin.github.io/pr/apps/with-errors/never-calls-openWindow/web_manifest.json"],
-  "supported_origins": ["https://rsolomakhin.github.io"]
+  "default_applications": ["https://stephenmcgruer.github.io/web-payments-demos/pr/apps/with-errors/never-calls-openWindow/web_manifest.json"],
+  "supported_origins": ["https://stephenmcgruer.github.io/web-payments-demos"]
 }

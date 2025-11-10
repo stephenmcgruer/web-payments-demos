@@ -6,20 +6,20 @@
 
 <body>
 
-<p>JavaScript from <code><strong>http</strong>://rsolomakhin.github.io</code>
+<p>JavaScript from <code><strong>http</strong>://stephenmcgruer.github.io/web-payments-demos</code>
 should be blocked.</p>
 
 <pre id="msg"></pre>
 
-<script src="http://rsolomakhin.github.io/pr/util.js"></script>
+<script src="http://stephenmcgruer.github.io/web-payments-demos/pr/util.js"></script>
 <script>
 if (window.error) { // defined in util.js, which should be blocked.
   // Put a red error message in the <pre id="msg"> above.
-  error('Mixed content from http://rsolomakhin.github.io/pr/util.js was loaded!');
+  error('Mixed content from http://stephenmcgruer.github.io/web-payments-demos/pr/util.js was loaded!');
 } else {
   // Put a green error message in the <pre id="msg"> above.
   const msg = document.createElement('pre');
-  msg.innerHTML = 'Mixed content from http://rsolomakhin.github.io/pr/util.js was blocked.';
+  msg.innerHTML = 'Mixed content from http://stephenmcgruer.github.io/web-payments-demos/pr/util.js was blocked.';
   msg.className = 'info';
   document.getElementById('msg').appendChild(msg);
 }

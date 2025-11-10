@@ -2,7 +2,7 @@
     "short_name": "Test App - Never calls openWindow",
     "name": "Test App - Never calls openWindow",
     "icons": [{
-        "src": "https://rsolomakhin.github.io/static/tree.png",
+        "src": "https://stephenmcgruer.github.io/web-payments-demos/static/tree.png",
         "sizes": "32x32"
     }],
     "serviceworker": {

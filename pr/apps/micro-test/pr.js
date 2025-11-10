@@ -31,7 +31,7 @@ function buildPaymentRequest() {
   }
 
   const supportedInstruments = [{
-    supportedMethods: 'https://rsolomakhin.github.io/pr/apps/micro',
+    supportedMethods: 'https://stephenmcgruer.github.io/web-payments-demos/pr/apps/micro',
   }];
 
   const details = {

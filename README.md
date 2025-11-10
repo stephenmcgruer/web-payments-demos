@@ -1,1 +1,1 @@
-# https://rsolomakhin.github.io/
+# https://stephenmcgruer.github.io/web-payments-demos

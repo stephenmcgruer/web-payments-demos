@@ -110,7 +110,7 @@ function install() {
             registration.paymentManager.instruments
                 .set('instrument-key', {
                     name: 'Chrome uses name and icon from the web app manifest',
-                    method: 'https://rsolomakhin.github.io',
+                    method: 'https://stephenmcgruer.github.io/web-payments-demos',
                 })
                 .then(() => {
                     registration.paymentManager.instruments.get('instrument-key').then((instrument) => {

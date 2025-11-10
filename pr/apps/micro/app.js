@@ -14,7 +14,7 @@ self.addEventListener('canmakepayment', (evt) => {
 
 self.addEventListener('paymentrequest', (evt) => {
   evt.respondWith({
-    methodName: 'https://rsolomakhin.github.io',
+    methodName: 'https://stephenmcgruer.github.io/web-payments-demos',
     details: {
       token: '1234567890',
     },
