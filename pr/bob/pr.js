@@ -8,7 +8,8 @@ function buildPaymentRequest() {
     return null;
   }
 
-  const returnValue = document.getElementById('returnValue').value;
+  const returnValueDiv = document.getElementById('returnValue');
+  const returnValue = returnValueDiv !== undefined ? returnValueDiv.value : true;
   const supportedInstruments = [{
     supportedMethods: 'https://bobbucks.dev/pay',
     data: {
