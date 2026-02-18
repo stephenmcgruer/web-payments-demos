@@ -1,4 +1,4 @@
-const windowLocalStorageIdentifier = "Credential #1"
+const windowLocalStorageIdentifier = "Credential #1";
 
 document.getElementById('createButton').addEventListener('click', async () => {
   publicKeyCredential = await createCredential(/*setPaymentExtension=*/false);
@@ -9,7 +9,7 @@ document.getElementById('createButton').addEventListener('click', async () => {
     arrayBufferToBase64(publicKeyCredential.rawId));
   window.parent.postMessage({
     type: 'enrollment',
-    credential": publicKeyCredential.id,
+    credential: arrayBufferToBase64(publicKeyCredential.rawId),
   }, '*');
 
   document.getElementById('triggerSpcButton').disabled = false;
