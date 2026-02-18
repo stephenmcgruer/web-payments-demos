@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebAuthn in an iframe</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+
+<body>
+  <div id="contents">
+    <h1>WebAuthn in an iframe</h1>
+
+    <p><button id="createButton">Create (non-SPC) passkey</button></p>
+    <p><button id="triggerSpcButton" disabled>Trigger SPC</button></p>
+  </div>
+  <pre id="msg"></pre>
+  <script src="pr.js"></script>
+  <script src="../util.js"></script>
+  <script src="../spc_util.js"></script>
+  <script src="/redirect.js"></script>
+</body>
+
+</html>
