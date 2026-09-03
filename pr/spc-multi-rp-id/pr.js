@@ -12,10 +12,9 @@ async function createPaymentCredential(windowLocalStorageIdentifier) {
       arrayBufferToBase64(publicKeyCredential.rawId));
     info(windowLocalStorageIdentifier + ' enrolled: ' + objectToString(
       publicKeyCredential) + '\n' + 'Extensions: ' +
-      extensionsOutputToString(publicKeyCredential));
-    const verificationResult = await verifyBrowserBoundKey(
-      publicKeyCredential, [cose_key_type_ec2, cose_key_type_rsa]);
-    info(verificationResult);
+      extensionsOutputToString(publicKeyCredential) + '\n\n' +
+      'RP ID: ' + window.location.hostname + '\n' +
+      'Credential ID (Base64): ' + arrayBufferToBase64(publicKeyCredential.rawId));
   } catch (err) {
     error(err);
   }
@@ -24,14 +23,48 @@ async function createPaymentCredential(windowLocalStorageIdentifier) {
 /**
  * Launches payment request for SPC.
  */
-async function onBuyClicked(windowLocalStorageIdentifier) {
+async function onBuyClicked() {
+  const credentialIds = [];
+
+  const rpId1 = document.getElementById('rp_id_1').value;
+  const credId1 = document.getElementById('credential_id_1').value;
+  if (rpId1 && credId1) {
+    try {
+      credentialIds.push({
+        rpId: rpId1,
+        credentialId: base64ToArray(credId1),
+      });
+    } catch (e) {
+      error('Invalid Base64 for Credential ID 1: ' + e.message);
+      return;
+    }
+  }
+
+  const rpId2 = document.getElementById('rp_id_2').value;
+  const credId2 = document.getElementById('credential_id_2').value;
+  if (rpId2 && credId2) {
+    try {
+      credentialIds.push({
+        rpId: rpId2,
+        credentialId: base64ToArray(credId2),
+      });
+    } catch (e) {
+      error('Invalid Base64 for Credential ID 2: ' + e.message);
+      return;
+    }
+  }
+
+  if (credentialIds.length === 0) {
+    error('Please enter at least one RP ID and Credential ID.');
+    return;
+  }
+
   try {
     const request = await createSPCPaymentRequest({
-      credentialIds: [base64ToArray(
-          window.localStorage.getItem(windowLocalStorageIdentifier))],
+      credentialIds: credentialIds,
       paymentEntitiesLogos: [
-        {url: 'https://stephenmcgruer.github.io/web-payments-demos/static/sync-network-logo.png', label: 'Sync Network'},
-        {url: 'https://stephenmcgruer.github.io/web-payments-demos/static/troy-alt-logo.png', label: 'TroyBank'},
+        {url: 'https://rsolomakhin.github.io/static/sync-network-logo.png', label: 'Sync Network'},
+        {url: 'https://rsolomakhin.github.io/static/troy-alt-logo.png', label: 'TroyBank'},
       ],
       // `browserBoundPubKeyCredParams` does not need to be set and will default
       // to the same values listed here.
@@ -58,38 +91,12 @@ async function onBuyClicked(windowLocalStorageIdentifier) {
       error(`Error from canMakePayment: ${error.message}`);
     }
 
-    const response = await request.show();
-    await response.complete('success')
-    console.log(response);
-    info(windowLocalStorageIdentifier + ' payment response: ' +
-      objectToString(response) + '\n' + 'Extensions: ' +
-      extensionsOutputToString(response.details));
-    const verificationResult = await verifyBrowserBoundKey(
-      response.details, [cose_key_type_ec2, cose_key_type_rsa]);
-    info(verificationResult);
-  } catch (err) {
-    error(err);
-  }
-}
-
-async function webAuthnGet(windowLocalStorageIdentifier) {
-  try {
-    const publicKey = {
-      challenge: new TextEncoder().encode('Authentication challenge'),
-      userVerification: 'required',
-      allowCredentials: [{
-        transports: ['internal'],
-        type: 'public-key',
-        id: base64ToArray(window.localStorage.getItem(
-          windowLocalStorageIdentifier)),
-      }, ],
-    };
-    const credentialInfoAssertion = await navigator.credentials.get({
-      publicKey
-    });
-    console.log(credentialInfoAssertion);
-    info('Successful login with ' + windowLocalStorageIdentifier + ': ' +
-      objectToString(credentialInfoAssertion));
+    const instrumentResponse = await request.show();
+    await instrumentResponse.complete('success')
+    console.log(instrumentResponse);
+    info('Payment response: ' +
+      objectToString(instrumentResponse) + '\n' + 'Extensions: ' +
+      extensionsOutputToString(instrumentResponse.details));
   } catch (err) {
     error(err);
   }
